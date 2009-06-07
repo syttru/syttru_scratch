@@ -1,0 +1,43 @@
+<html>
+<head>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var shine_boundary = 300;
+      var shade_boundary = 500;
+      var now = function(){ return new Date().getTime(); };
+      (function(target){
+        target = $.extend(target, {
+          shine: function(){
+            this.style.opacity = "1";
+            $.data(this, "shined", now());
+            var distance = now() - $.data(this, "shaded");
+            if(isNaN(distance)) return;
+            if(distance > shade_boundary){
+              $("#output").append('<img src="blank.png"/>');
+            }
+          },
+          shade: function(){
+            this.style.opacity = "0.1";
+            $.data(this, "shaded", now());
+            var distance = now() - $.data(this, "shined");
+            if(isNaN(distance)) return;
+            var morse = distance > shine_boundary ? "tuu" : "ton";
+            console.log(morse);
+            $("#output").append('<img src="' + morse + '.png"/>');
+          }
+        });
+        target.shade();
+        $(target).mousedown(target.shine);
+        $(target).mouseup(target.shade);
+      })($("img").get(0));
+    });
+  </script>
+</head>
+<body>
+  <div>
+    <img src="a.jpg"/>
+  </div>
+  <div id="output"></div>
+</body>
+</html>
